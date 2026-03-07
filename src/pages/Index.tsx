@@ -28,7 +28,7 @@ const Index = () => {
       setState("loading");
 
       const response = await fetch(
-        `http://127.0.0.1:5000/get-video?url=${encodeURIComponent(url)}`
+        ` http://192.168.0.106:8080/get-video?url=${encodeURIComponent(url)}`
       );
 
       const data = await response.json();
