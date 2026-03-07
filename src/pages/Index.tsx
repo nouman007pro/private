@@ -27,7 +27,7 @@ const Index = () => {
       setState("loading");
 
       const response = await fetch(
-        `https://04fbd74e-17c4-4e86-a768-c4bdd084a4d3-00-z2cw58o53yiq.worf.replit.dev/get-video?url=${encodeURIComponent(
+        `web-production-741a.up.railway.app/get-video?url=${encodeURIComponent(
           url
         )}`
       );
