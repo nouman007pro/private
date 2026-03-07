@@ -39,7 +39,7 @@ const Index = () => {
         thumbnail: data.thumbnail,
       });
 
-      setFormats(data.formats);
+      setFormats(data.formats || []);
 
       setState("results");
     } catch (err) {
@@ -54,9 +54,8 @@ const Index = () => {
     setVideoData(null);
     setFormats([]);
   };
-
-  const videoFormats = formats.filter((f) => f.hasVideo);
-  const audioFormats = formats.filter((f) => f.hasAudio && !f.hasVideo);
+const videoFormats = (formats || []).filter((f) => f.hasVideo);
+const audioFormats = (formats || []).filter((f) => f.hasAudio && !f.hasVideo);
 
   return (
     <div className="min-h-screen flex flex-col">
