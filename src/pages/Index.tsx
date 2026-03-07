@@ -25,13 +25,9 @@ const Index = () => {
 
     try {
       setState("loading");
-
-      const response = await fetch(
-        `web-production-741a.up.railway.app/get-video?url=${encodeURIComponent(
-          url
-        )}`
-      );
-
+const response = await fetch(
+  `https://web-production-741a.up.railway.app/get-video?url=${encodeURIComponent(url)}`
+);
       const data = await response.json();
 
       setVideoData({
