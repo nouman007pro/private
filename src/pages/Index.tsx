@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Download } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { UrlInput } from "@/components/UrlInput";
@@ -28,7 +27,9 @@ const Index = () => {
       setState("loading");
 
       const response = await fetch(
-        `https://04fbd74e-17c4-4e86-a768-c4bdd084a4d3-00-z2cw58o53yiq.worf.replit.dev/get-video?url=${encodeURIComponent(url)}`
+        `https://04fbd74e-17c4-4e86-a768-c4bdd084a4d3-00-z2cw58o53yiq.worf.replit.dev/get-video?url=${encodeURIComponent(
+          url
+        )}`
       );
 
       const data = await response.json();
@@ -54,6 +55,9 @@ const Index = () => {
     setFormats([]);
   };
 
+  const videoFormats = formats.filter((f) => f.hasVideo);
+  const audioFormats = formats.filter((f) => f.hasAudio && !f.hasVideo);
+
   return (
     <div className="min-h-screen flex flex-col">
 
@@ -74,12 +78,61 @@ const Index = () => {
         {state === "loading" && <LoadingState />}
 
         {state === "results" && (
-          <>
-            <VideoPreview
-              video={videoData}
-              videoUrl={formats[0]?.url}
-            />
-          </>
+          <div className="w-full max-w-2xl">
+
+            <VideoPreview video={videoData} videoUrl={videoFormats[0]?.url} />
+
+            {/* VIDEO FORMATS */}
+            <h2 className="text-xl font-semibold mt-6 mb-3">
+              Video Downloads
+            </h2>
+
+            {videoFormats.map((format, i) => (
+              <div
+                key={i}
+                className="flex justify-between items-center border rounded p-3 mb-2"
+              >
+                <span>
+                  {format.qualityLabel || "Video"} ({format.container})
+                </span>
+
+                <a
+                  href={format.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-blue-500 text-white px-3 py-1 rounded"
+                >
+                  Download
+                </a>
+              </div>
+            ))}
+
+            {/* AUDIO FORMATS */}
+            <h2 className="text-xl font-semibold mt-6 mb-3">
+              Audio Downloads
+            </h2>
+
+            {audioFormats.map((format, i) => (
+              <div
+                key={i}
+                className="flex justify-between items-center border rounded p-3 mb-2"
+              >
+                <span>
+                  Audio {format.audioBitrate || "128"} kbps
+                </span>
+
+                <a
+                  href={format.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-green-500 text-white px-3 py-1 rounded"
+                >
+                  Download MP3
+                </a>
+              </div>
+            ))}
+
+          </div>
         )}
 
         {state === "error" && (
