@@ -1,18 +1,13 @@
-FROM node:20
+FROM python:3.11
 
-RUN apt-get update && apt-get install -y \
-python3 \
-python3-pip \
-ffmpeg
-
-RUN pip install yt-dlp
+RUN apt-get update && apt-get install -y ffmpeg
 
 WORKDIR /app
 
 COPY . .
 
-RUN npm install
+RUN pip install -r requirements.txt
 
 EXPOSE 8080
 
-CMD ["node","server.js"]
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "main:app"]
