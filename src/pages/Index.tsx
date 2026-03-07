@@ -70,6 +70,7 @@ const Index = () => {
             VideoLink
           </span>
         </button>
+
         <ThemeToggle />
       </header>
 
@@ -95,7 +96,7 @@ const Index = () => {
           </motion.div>
         )}
 
-        {/* URL Input */}
+        {/* Input */}
         {state !== "results" && (
           <div className="w-full mb-8">
             <UrlInput onSubmit={handleSubmit} isLoading={state === "loading"} />
@@ -128,33 +129,9 @@ const Index = () => {
               </button>
             </div>
 
-            {/* Video Preview */}
-            {videoData && <VideoPreview video={videoData} />}
+            <VideoPreview video={videoData} />
 
-            {/* Format list */}
-            {formats.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {formats.map((format, index) => (
-                  <a
-                    key={index}
-                    href={format.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 rounded-lg bg-card border flex flex-col items-center justify-center hover:shadow-lg transition"
-                  >
-                    <span className="text-sm font-semibold">
-                      {format.type === "video" ? format.quality : "Audio"}
-                    </span>
-                    <span className="text-xs text-muted-foreground mt-1">
-                      {format.ext}
-                    </span>
-                    <span className="text-xs text-muted-foreground mt-1">
-                      Download
-                    </span>
-                  </a>
-                ))}
-              </div>
-            )}
+            <FormatList formats={formats} />
           </div>
         )}
 
