@@ -46,7 +46,7 @@ const Index = () => {
       setState("loading");
       
       // APNA CLOUDFLARE WORKER URL YAHAN DALEIN
-      const WORKER_URL = "https://your-worker-name.your-subdomain.workers.dev"; 
+      const WORKER_URL = "https://yt-api.mindmentor2025.workers.dev/"; 
       
       const response = await fetch(
         `${WORKER_URL}/?url=${encodeURIComponent(url)}`
