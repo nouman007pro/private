@@ -13,7 +13,7 @@ const Index = () => {
   const [videoData, setVideoData] = useState<any>(null);
   const [formats, setFormats] = useState<any[]>([]);
 
-  // Browser-based download function (Forcing download over playing)
+  // Browser-based download function
   const handleDownloadAction = async (url: string, filename: string) => {
     try {
       const res = await fetch(url);
@@ -27,7 +27,7 @@ const Index = () => {
       a.remove();
       window.URL.revokeObjectURL(blobUrl);
     } catch (err) {
-      // Fallback for CORS restricted links
+      // Fallback: Agar CORS block kare toh naye tab mein open karein
       window.open(url, "_blank");
     }
   };
@@ -44,22 +44,23 @@ const Index = () => {
     try {
       setState("loading");
       
-      // Final Worker URL without trailing slash
-      const WORKER_URL = "https://yt-api.mindmentor2025.workers.dev"; 
+      // HUGGING FACE BACKEND URL
+      const BACKEND_URL = "https://mindmentor12-ytdl-api.hf.space"; 
       
+      // FIX: Yahan /get-video endpoint add kiya gaya hai
       const response = await fetch(
-        `${WORKER_URL}/?url=${encodeURIComponent(url)}`
+        `${BACKEND_URL}/get-video?url=${encodeURIComponent(url)}`
       );
 
       if (!response.ok) {
-        const errorBody = await response.json().catch(() => ({}));
-        throw new Error(errorBody.error || "Server error: Unable to fetch video.");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Backend is busy. Please try again in a few seconds.");
       }
 
       const data = await response.json();
 
       if (!data.formats || data.formats.length === 0) {
-        throw new Error("No downloadable formats found for this video.");
+        throw new Error("No downloadable formats found. YouTube might be blocking this IP.");
       }
 
       setVideoData({
@@ -71,7 +72,7 @@ const Index = () => {
       setState("results");
     } catch (err: any) {
       setState("error");
-      setError(err.message || "Something went wrong. Please try again.");
+      setError(err.message || "Something went wrong. Please check your Hugging Face Space.");
     }
   };
 
@@ -110,7 +111,7 @@ const Index = () => {
         {state === "loading" && (
           <div className="mt-12 text-center">
             <LoadingState />
-            <p className="mt-4 text-sm text-muted-foreground animate-pulse">Bypassing restrictions...</p>
+            <p className="mt-4 text-sm text-muted-foreground animate-pulse">Fetching data from Hugging Face...</p>
           </div>
         )}
 
@@ -136,7 +137,7 @@ const Index = () => {
                 {/* Video Options */}
                 <div>
                   <h2 className="text-lg font-bold mb-3 border-b pb-2">Video Qualities</h2>
-                  <div className="grid gap-2">
+                  <div className="grid gap-2 max-h-[300px] overflow-y-auto pr-2">
                     {videoFormats.length > 0 ? videoFormats.map((format, i) => (
                       <div key={i} className="flex justify-between items-center p-3 rounded-lg bg-card border shadow-sm">
                         <span className="font-semibold text-sm capitalize">{format.qualityLabel} ({format.container})</span>
@@ -147,7 +148,7 @@ const Index = () => {
                           Download
                         </button>
                       </div>
-                    )) : <p className="text-sm text-muted-foreground">No video formats available.</p>}
+                    )) : <p className="text-sm text-muted-foreground">No direct video formats found.</p>}
                   </div>
                 </div>
 
@@ -190,7 +191,7 @@ const Index = () => {
       </main>
 
       <footer className="py-8 text-center border-t bg-card/20">
-        <p className="text-sm text-muted-foreground italic">© 2026 VideoLink - Privacy Focused Downloader</p>
+        <p className="text-sm text-muted-foreground italic">© 2026 VideoLink - Professional Downloader</p>
       </footer>
     </div>
   );
